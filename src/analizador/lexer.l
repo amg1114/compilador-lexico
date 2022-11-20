@@ -5,15 +5,24 @@
 %} 
 
 %option noyywrap
-  
-DIGIT   [0-9]
-NUM     {DIGIT}+("."{DIGIT}+)?
+%option yylineno
 
-/* Rule Section */
-%% 
-{NUM}               { yylval=atoi(yytext); return NUMBER; } 
-[-()+*/;]            { return *yytext; }
-"evaluar"            { return EVALUAR; }
-[[:blank:]] ;
-.                     yyerror("Unknown character");
+/* ---------- Gramatica ---------- */
+CADENA \"[a-z]\"$
+TOKEN [a-z]
+DIGITO [0-9]
+
+BOOLEANO "true"|"false" 
+
+FUNC_IMPRIMIR "imprimir"
+
+%%
+{FUNC_IMPRIMIR}       { return IMPRIMIR; }
+\"[a-z]+\"          { return STRING; }
+{DIGITO}+             { yylval = atoi(yytext); return NUMERO; }
+{TOKEN}               { yylval = *yytext - 'a'; return TOKEN; }
+
+[-+()=/*;\"]       { return *yytext; }
+[\t\r\n]+                                ;
+.                 {fprintf(stderr, "Caracter no permitido: %s \n", yytext);};
 %%

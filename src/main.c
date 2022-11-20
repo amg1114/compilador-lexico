@@ -2,7 +2,7 @@
 #include "analizador/y.tab.h"
 void parse(FILE *file);
 
-void main(){
+int main(){
     FILE *file = fopen("entrada.txt", "r");
     parse(file);   
 }
